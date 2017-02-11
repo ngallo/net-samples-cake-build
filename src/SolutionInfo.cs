@@ -8,6 +8,6 @@ using System.Reflection;
 [assembly: AssemblyProduct("CakeBuildSample")]
 [assembly: AssemblyVersion("0.0.2")]
 [assembly: AssemblyFileVersion("0.0.2")]
-[assembly: AssemblyInformationalVersion("0.0.2.100")]
+[assembly: AssemblyInformationalVersion("0.0.2.000")]
 [assembly: AssemblyCopyright("Copyright (c) 2017 - 2017 Nicola Gallo")]
 

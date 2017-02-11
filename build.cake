@@ -2,9 +2,9 @@
 
 var target = Argument("target", "Default");
 var configuration = Argument<string>("configuration", "Release");
+var buildNumber = Argument<string>("buildNumber", "000");
 
 var appName = "CakeBuildSample";
-var buildNumber = "100";
 
 /********** TOOLS **********/
 
@@ -29,6 +29,7 @@ var solutionInfoFilePath = "./src/SolutionInfo.cs";
 var nugetPackagesFolderPath = "./src/packages";
 var buildBinFoldersPath = "./src/**/bin";
 var buildObjFoldersPath = "./src/**/obj";
+var buildFolderPath = "./src/CakeBuildSample/bin/" + configuration;
 
 // Define nUnit3 files
 var nUnit3TestsFilesPath = "./src/**/bin/" + configuration + "/*.Tests.dll";
@@ -43,6 +44,8 @@ var outputFolderPath = "./output";
 var outputTestsFolderPath = "./output/tests";
 var outputTestsResultFilePath = "./output/tests/result.xml";
 var outputReportGeneratorFolderPath = "./output/tests/html";
+var outputBuildFolderPath = "./output/artifacts/build-" + semVersion;
+var outputBuildZipFilePath = "./output/artifacts/build-" + semVersion + ".zip";
 
 /********** SETUP / TEARDOWN **********/
 
@@ -131,6 +134,33 @@ Task("Tests")
 
 /********** PACKAGE **********/
 
+Task("Create-Artifacts")
+  .Does(() => 
+    {
+    Information("Creating artifacts folder");
+    CreateDirectory(outputBuildFolderPath);
+
+    Information("Copying artifacts");
+    CopyFiles(buildFolderPath + "/*.dll", outputBuildFolderPath);
+    CopyFiles(buildFolderPath + "/*.pdb", outputBuildFolderPath);
+    CopyFiles(buildFolderPath + "/*.xml", outputBuildFolderPath);
+    CopyFiles(buildFolderPath + "/*.exe", outputBuildFolderPath);
+
+    CopyFiles(new FilePath[] { "LICENSE", "README.md", "ReleaseNotes.md" }, outputBuildFolderPath);
+});
+
+Task("Zip-Artifacts")
+  .Does(() => 
+    {
+    Information("Compressing artifacts");
+    Zip(outputBuildFolderPath, outputBuildZipFilePath);
+});
+
+
+Task("Package")
+    .IsDependentOn("Create-Artifacts")
+    .IsDependentOn("Zip-Artifacts");
+
 /********** TASK TARGETS **********/
 
 Task("CI")
@@ -146,6 +176,7 @@ Task("RC")
   .IsDependentOn("Clean")
   .IsDependentOn("Build")
   .IsDependentOn("Tests")
+  .IsDependentOn("Package")
   .Does(() => 
 {
     Information("RC Build completed");
