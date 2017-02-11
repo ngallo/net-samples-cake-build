@@ -1,27 +1,39 @@
+/********** ARGUMENTS **********/
+
 var target = Argument("target", "Default");
 
 /********** GLOBAL VARIABLES **********/
 
-var buildArtifacts  = Directory("./src/packages");
-var solutions = GetFiles("./**/*.sln");
+var solutionFiles = GetFiles("./**/*.sln");
+
+var packagesArtifactsDir  = Directory("./src/packages");
+
+var nUnit3ToolPath = GetFiles("./src/packages/NUnit.ConsoleRunner.3.6.0/tools/nunit3-console.exe").First();
+var nUnit3Results = MakeAbsolute(File("./output/tests/result.xml"));
+var nUnit3TestPath = "./src/**/bin/DEbug/*.Tests.dll";
+
+var reportGeneratorToolPath = "./src/packages/ReportGenerator.2.5.2/Tools/reportgenerator.exe";
+var openCoverToolPath = "./src/packages/OpenCover.4.6.519/tools/OpenCover.Console.exe";
+
+var outputArtifactsDir  = Directory("./output");
+var outputTestsPath = "./output/tests";
+var outputTestsResultPath = string.Format("{0}/result.xml", outputTestsPath);
+var outputReportGeneratorPath = string.Format("{0}/html", outputTestsPath);
 
 /********** TARGETS **********/
 
 Task("Clean")
     .Does(() =>
 {
-    CleanDirectories(new DirectoryPath[] { buildArtifacts });
+    CleanDirectories(new DirectoryPath[] { packagesArtifactsDir, outputArtifactsDir });
 });
 
 Task("Restore")
     .Does(() =>
 {
-    var solutions = GetFiles("./**/*.sln");
-
-    foreach(var solution in solutions)
+    foreach(var solutionFile in solutionFiles)
     {
-        Information("Restoring solution:" + solution);
-        NuGetRestore(solution);
+        NuGetRestore(solutionFile);
     }
 });
 
@@ -30,31 +42,28 @@ Task("Build")
     .IsDependentOn("Restore")
     .Does(() =>
 {
-    var solutions = GetFiles("./**/*.sln");
-
-    foreach(var solution in solutions)
+    foreach(var solutionFile in solutionFiles)
     {
-         Information("Building solution:" + solution);
-        MSBuild(solution);
+        MSBuild(solutionFile);
     }
 });
 
 Task("Output")
     .Does(() =>
 {
-    CreateDirectory("./output/tests");
+    CreateDirectory(outputTestsPath);
 });
 
 Task("Tests")
     .Does(() =>
 {
-    NUnit3("./src/**/bin/DEbug/*.Tests.dll",
+    NUnit3(nUnit3TestPath,
         new NUnit3Settings {
-            ToolPath = GetFiles("./src/packages/NUnit.ConsoleRunner.3.6.0/tools/nunit3-console.exe").First()
-            , Results = MakeAbsolute(File("./output/tests/result.xml"))
+            ToolPath = nUnit3ToolPath
+            , Results = nUnit3Results
     });
-    ReportGenerator("./output/tests/result.xml", "./output/tests/html", new ReportGeneratorSettings() {
-      ToolPath = "./src/packages/ReportGenerator.2.5.2/Tools/reportgenerator.exe"
+    ReportGenerator(outputTestsResultPath, outputReportGeneratorPath, new ReportGeneratorSettings() {
+      ToolPath = reportGeneratorToolPath
     });
 });
 
@@ -64,9 +73,8 @@ Task("CI")
   .IsDependentOn("Tests")
   .Does(() => 
 {
-  Information("CI Build completed :)");
+    Information("CI Build completed :-)");
 });
-
 
 Task("Default")
   .IsDependentOn("CI");
