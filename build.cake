@@ -6,10 +6,10 @@ var target = Argument("target", "Default");
 
 var solutionPath = "./src/CakeBuildSample.sln";
 
-var packagesArtifactsDir  = Directory("./src/packages");
+var packagesArtifactsPath  = "./src/packages";
 
-var nUnit3ToolPath = GetFiles("./src/packages/NUnit.ConsoleRunner.3.6.0/tools/nunit3-console.exe").First();
-var nUnit3Results = MakeAbsolute(File("./output/tests/result.xml"));
+var nUnit3ToolPathPath = "./src/packages/NUnit.ConsoleRunner.3.6.0/tools/nunit3-console.exe";
+var nUnit3ResultsPath = "./output/tests/result.xml";
 var nUnit3TestPath = "./src/**/bin/Debug/*.Tests.dll";
 
 var reportGeneratorToolPath = "./src/packages/ReportGenerator.2.5.2/Tools/reportgenerator.exe";
@@ -17,17 +17,17 @@ var reportGeneratorFilter1 = "+[*]*";
 var reportGeneratorFilter2 = "-[*Tests*]*";
 var openCoverToolPath = "./src/packages/OpenCover.4.6.519/tools/OpenCover.Console.exe";
 
-var outputArtifactsDir  = Directory("./output");
+var outputArtifactsPath = "./output";
 var outputTestsPath = "./output/tests";
-var outputTestsResultPath = string.Format("{0}/result.xml", outputTestsPath);
-var outputReportGeneratorPath = string.Format("{0}/html", outputTestsPath);
+var outputTestsResultPath = "./output/tests/result.xml";
+var outputReportGeneratorPath = "./output/tests/html";
 
 /********** TARGETS **********/
 
 Task("Clean")
     .Does(() =>
 {
-    CleanDirectories(new DirectoryPath[] { packagesArtifactsDir, outputArtifactsDir });
+    CleanDirectories(new DirectoryPath[] { Directory(packagesArtifactsPath), Directory(outputArtifactsPath) });
 });
 
 Task("Restore")
@@ -56,8 +56,8 @@ Task("Tests")
     OpenCover(tool => {
         tool.NUnit3(nUnit3TestPath,
           new NUnit3Settings {
-              ToolPath = nUnit3ToolPath
-            , Results = nUnit3Results
+              ToolPath = GetFiles(nUnit3ToolPathPath).First()
+            , Results = MakeAbsolute(File(nUnit3ResultsPath))
         });
       },
       new FilePath(outputTestsResultPath),
