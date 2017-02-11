@@ -4,15 +4,17 @@ var target = Argument("target", "Default");
 
 /********** GLOBAL VARIABLES **********/
 
-var solutionFiles = GetFiles("./**/*.sln");
+var solutionPath = "./src/CakeBuildSample.sln";
 
 var packagesArtifactsDir  = Directory("./src/packages");
 
 var nUnit3ToolPath = GetFiles("./src/packages/NUnit.ConsoleRunner.3.6.0/tools/nunit3-console.exe").First();
 var nUnit3Results = MakeAbsolute(File("./output/tests/result.xml"));
-var nUnit3TestPath = "./src/**/bin/DEbug/*.Tests.dll";
+var nUnit3TestPath = "./src/**/bin/Debug/*.Tests.dll";
 
 var reportGeneratorToolPath = "./src/packages/ReportGenerator.2.5.2/Tools/reportgenerator.exe";
+var reportGeneratorFilter1 = "+[*]*";
+var reportGeneratorFilter2 = "-[*Tests*]*";
 var openCoverToolPath = "./src/packages/OpenCover.4.6.519/tools/OpenCover.Console.exe";
 
 var outputArtifactsDir  = Directory("./output");
@@ -31,10 +33,7 @@ Task("Clean")
 Task("Restore")
     .Does(() =>
 {
-    foreach(var solutionFile in solutionFiles)
-    {
-        NuGetRestore(solutionFile);
-    }
+    NuGetRestore(MakeAbsolute(File(solutionPath)));
 });
 
 Task("Build")
@@ -42,10 +41,7 @@ Task("Build")
     .IsDependentOn("Restore")
     .Does(() =>
 {
-    foreach(var solutionFile in solutionFiles)
-    {
-        MSBuild(solutionFile);
-    }
+    MSBuild(MakeAbsolute(File(solutionPath)));
 });
 
 Task("Output")
@@ -57,13 +53,21 @@ Task("Output")
 Task("Tests")
     .Does(() =>
 {
-    NUnit3(nUnit3TestPath,
-        new NUnit3Settings {
-            ToolPath = nUnit3ToolPath
+    OpenCover(tool => {
+        tool.NUnit3(nUnit3TestPath,
+          new NUnit3Settings {
+              ToolPath = nUnit3ToolPath
             , Results = nUnit3Results
-    });
+        });
+      },
+      new FilePath(outputTestsResultPath),
+      new OpenCoverSettings() {
+            ToolPath = openCoverToolPath
+        }
+        .WithFilter(reportGeneratorFilter1)
+        .WithFilter(reportGeneratorFilter2));
     ReportGenerator(outputTestsResultPath, outputReportGeneratorPath, new ReportGeneratorSettings() {
-      ToolPath = reportGeneratorToolPath
+        ToolPath = reportGeneratorToolPath
     });
 });
 
