@@ -1,0 +1,4 @@
+group test
+    framework: >= net461
+    source https://nuget.org/api/v2
+    nuget NUnit

@@ -1,0 +1,7 @@
+Name: CakeBuildSample
+LocalBuildNumber: 001
+Artifacts:
+- Name: cake-build-lib
+  Path: CakeBuildLib
+- Name: cake-build-sample
+  Path: CakeBuildSample

@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeBuildSample", "CakeBuildSample\CakeBuildSample.csproj", "{E8CC2696-8D61-42BB-BB91-03DD21EB797A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{A62B1CE6-7056-4885-9963-AACB71F37426}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeBuildLib", "CakeBuildLib\CakeBuildLib.csproj", "{EB539354-9B8A-4ED2-BB46-64EC88C868C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeBuildLib", "src\CakeBuildLib\CakeBuildLib.csproj", "{EB539354-9B8A-4ED2-BB46-64EC88C868C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeBuild.Tests", "CakeBuild.Tests\CakeBuild.Tests.csproj", "{3E0C9383-15AD-44F4-A5C1-AD0B1887C181}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeBuildSample", "src\CakeBuildSample\CakeBuildSample.csproj", "{E8CC2696-8D61-42BB-BB91-03DD21EB797A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeBuild.Test", "test\CakeBuild.Test\CakeBuild.Test.csproj", "{3E0C9383-15AD-44F4-A5C1-AD0B1887C181}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,14 +17,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E8CC2696-8D61-42BB-BB91-03DD21EB797A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E8CC2696-8D61-42BB-BB91-03DD21EB797A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E8CC2696-8D61-42BB-BB91-03DD21EB797A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E8CC2696-8D61-42BB-BB91-03DD21EB797A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EB539354-9B8A-4ED2-BB46-64EC88C868C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EB539354-9B8A-4ED2-BB46-64EC88C868C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB539354-9B8A-4ED2-BB46-64EC88C868C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB539354-9B8A-4ED2-BB46-64EC88C868C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8CC2696-8D61-42BB-BB91-03DD21EB797A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8CC2696-8D61-42BB-BB91-03DD21EB797A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8CC2696-8D61-42BB-BB91-03DD21EB797A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8CC2696-8D61-42BB-BB91-03DD21EB797A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3E0C9383-15AD-44F4-A5C1-AD0B1887C181}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3E0C9383-15AD-44F4-A5C1-AD0B1887C181}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E0C9383-15AD-44F4-A5C1-AD0B1887C181}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -30,5 +32,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3E0C9383-15AD-44F4-A5C1-AD0B1887C181} = {A62B1CE6-7056-4885-9963-AACB71F37426}
 	EndGlobalSection
 EndGlobal

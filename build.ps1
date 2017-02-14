@@ -17,6 +17,8 @@ and execute your Cake build script with the parameters you provide.
 The build script to execute.
 .PARAMETER Target
 The build script target to run.
+.PARAMETER BuildNumber
+The build number to run.
 .PARAMETER Configuration
 The build configuration to use.
 .PARAMETER Verbosity
@@ -44,6 +46,7 @@ Param(
     [string]$Target = "Default",
     [ValidateSet("Release", "Debug")]
     [string]$Configuration = "Release",
+    [string]$BuildNumber = $null,
     [ValidateSet("Quiet", "Minimal", "Normal", "Verbose", "Diagnostic")]
     [string]$Verbosity = "Verbose",
     [switch]$Experimental,
@@ -185,5 +188,8 @@ if (!(Test-Path $CAKE_EXE)) {
 
 # Start Cake
 Write-Host "Running build script..."
-Invoke-Expression "& `"$CAKE_EXE`" `"$Script`" -target=`"$Target`" -configuration=`"$Configuration`" -verbosity=`"$Verbosity`" $UseMono $UseDryRun $UseExperimental $ScriptArgs"
+$LOCAL_SCRIPT = Join-Path $PSScriptRoot $Script
+$Expression = "& `"$CAKE_EXE`" `"$LOCAL_SCRIPT`" -target=`"$Target`" -build_number=`"$BuildNumber`" -configuration=`"$Configuration`" -verbosity=`"$Verbosity`" $UseMono $UseDryRun $UseExperimental $ScriptArgs"
+Write-Host "Invoking:" $Expression
+Invoke-Expression $Expression
 exit $LASTEXITCODE

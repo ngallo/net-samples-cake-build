@@ -1,0 +1,22 @@
+version: 1.0.{build}
+branches:
+  only:
+  - master
+environment:
+  APPVEYOR_BUILD_CERT_TIMESTAMP_URI: http://timestamp.digicert.com
+  APPVEYOR_BUILD_CERT_PATH: ./certificates/signing/Dev_TemporaryKey.pfx
+build_script:
+- ps: ./build.ps1 -target "RC"
+artifacts:
+- path: ./output/artifacts/cake-build-lib
+  name: cake-build-lib
+- path: ./output/cake-build-sample
+  name: cake-build-sample
+notifications:
+- provider: Email
+  to:
+  - nicolagmt@hotmail.com
+  subject: CakeBuildSample - AppVeyor
+  on_build_success: false
+  on_build_failure: true
+  on_build_status_changed: false

@@ -1,7 +1,7 @@
 ﻿using CakeBuildLib;
 using NUnit.Framework;
 
-namespace CakeBuild.Tests
+namespace CakeBuild.Test
 {
     [TestFixture]
     public class CalculatorTests
